@@ -1,7 +1,8 @@
 # Doxygen Hello World
 
+This guides through adding Doxygen to a Project
+
 ## Getting Started
-- Install Doxygen to your System
 - Clone repo
     ```DOS
     git clone https://github.com/royyandzakiy/doxy-helloworld    
@@ -17,6 +18,7 @@
     ```
 
 ## Adding Doxygen to any project
+- Install Doxygen into your System
 - `doxy-helloworld/CMakeLists.txt` Add these lines
     ```
     ...
