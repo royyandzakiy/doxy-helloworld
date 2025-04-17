@@ -1,0 +1,111 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        // CMAKE TASKS
+        {
+            "label": "cmake-configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "${workspaceFolder}\\build",
+                "-G",
+                "Visual Studio 17 2022",
+                "-A",
+                "x64"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Configure CMake project"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}\\build",
+                "--config",
+                "Debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Build project",
+            "dependsOn": ["cmake-configure"]
+        },
+
+        // CLEAN TASKS
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rmdir",
+            "args": [
+                "/s",
+                "/q",
+                "${workspaceFolder}\\build"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Delete build directory"
+        },
+        {
+            "label": "clean-rebuild",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "rmdir /s /q ${workspaceFolder}\\build && cmake -S . -B ${workspaceFolder}\\build -G \"Visual Studio 17 2022\" -A x64 && cmake --build ${workspaceFolder}\\build --config Debug"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "detail": "Full clean rebuild",
+            "dependsOrder": "sequence"
+        },
+
+
+        // RUN TASKS
+        {
+            "label": "Build & Run: main",
+            "type": "shell",
+            "command": "${workspaceFolder}\\build\\Debug\\hello_world.exe",
+            "group": "test",
+            "problemMatcher": [],
+            "detail": "Run Main Application",
+            "dependsOn": ["build"]
+        },
+        {
+            "label": "Build & Run: Tests",
+            "type": "shell",
+            // "command": "cd ${workspaceFolder}\\build && ctest -C Debug --output-on-failure",
+            "command": "cd build && set CTEST_OUTPUT_ON_FAILURE=1 && ctest -C Debug --output-on-failure",
+            "group": "test",
+            "problemMatcher": [],
+            "detail": "Run Test Suite",
+            "dependsOn": ["build"]
+        },
+        
+        // COVERAGE
+        {
+            "label": "coverage",
+            "type": "shell",
+            // "command": "cd build && gcovr --gcov-executable gcov --exclude tests/ --txt-metric branch --print-summary --html-details coverage.html --xml coverage.xml",
+            // "command": "cd build && gcovr --gcov-executable gcov --exclude tests/ --verbose --html-details coverage.html --xml coverage.xml",
+            "command": "cd build && gcovr --gcov-executable \"C:\\MinGW\\bin\\gcov.exe\" --root ${workspaceFolder} --exclude tests/ --print-summary --html-details coverage.html --xml coverage.xml",
+            "dependsOn": "test",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+}
